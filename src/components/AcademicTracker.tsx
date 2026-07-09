@@ -1,15 +1,17 @@
 import { AppState } from "../types";
-import { CheckCircle2, Clock, Circle, HelpCircle, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Clock, Circle, HelpCircle, Plus, Trash2, Shield } from "lucide-react";
 import { useState } from "react";
 
 export function AcademicTracker({
   state,
   toggleCourseWeek,
   updateState,
+  onActivateFocus,
 }: {
   state: AppState;
   toggleCourseWeek: (courseId: string, weekNum: number) => void;
   updateState: (updates: Partial<AppState>) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const [newWeakTopic, setNewWeakTopic] = useState<Record<string, string>>({});
 
@@ -121,48 +123,84 @@ export function AcademicTracker({
                 
                 <div className="flex items-center justify-between p-2.5 border border-neutral-200 text-sm">
                   <span className="text-neutral-700 font-medium">Concept Recall Sheet</span>
-                  <button
-                    onClick={() => {
-                      const updated = state.courses.map((c) => {
-                        if (c.id === course.id) {
-                          const states: ("not-started" | "in-progress" | "done")[] = ["not-started", "in-progress", "done"];
-                          const currentIdx = states.indexOf(c.recallSheetStatus);
-                          const next = states[(currentIdx + 1) % 3];
-                          return { ...c, recallSheetStatus: next };
-                        }
-                        return c;
-                      });
-                      updateState({ courses: updated });
-                    }}
-                    className={`px-2 py-0.5 text-xs font-mono rounded border ${getStatusBorder(course.recallSheetStatus)}`}
-                  >
-                    {course.recallSheetStatus.toUpperCase()}
-                  </button>
+                  <div className="flex items-center space-x-1.5">
+                    {onActivateFocus && (
+                      <button
+                        type="button"
+                        onClick={() => onActivateFocus(`${course.shortName} Concept Recall Sheet Study`)}
+                        className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                        title="Focus on Concept Recall Sheet"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        const updated = state.courses.map((c) => {
+                          if (c.id === course.id) {
+                            const states: ("not-started" | "in-progress" | "done")[] = ["not-started", "in-progress", "done"];
+                            const currentIdx = states.indexOf(c.recallSheetStatus);
+                            const next = states[(currentIdx + 1) % 3];
+                            return { ...c, recallSheetStatus: next };
+                          }
+                          return c;
+                        });
+                        updateState({ courses: updated });
+                      }}
+                      className={`px-2 py-0.5 text-xs font-mono rounded border ${getStatusBorder(course.recallSheetStatus)}`}
+                    >
+                      {course.recallSheetStatus.toUpperCase()}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between p-2.5 border border-neutral-200 text-sm">
                   <span className="text-neutral-700 font-medium">Practice & Quiz Assignment Qs</span>
-                  <button
-                    onClick={() => {
-                      const updated = state.courses.map((c) => {
-                        if (c.id === course.id) {
-                          const states: ("not-started" | "in-progress" | "done")[] = ["not-started", "in-progress", "done"];
-                          const currentIdx = states.indexOf(c.practiceQuestions);
-                          const next = states[(currentIdx + 1) % 3];
-                          return { ...c, practiceQuestions: next };
-                        }
-                        return c;
-                      });
-                      updateState({ courses: updated });
-                    }}
-                    className={`px-2 py-0.5 text-xs font-mono rounded border ${getStatusBorder(course.practiceQuestions)}`}
-                  >
-                    {course.practiceQuestions.toUpperCase()}
-                  </button>
+                  <div className="flex items-center space-x-1.5">
+                    {onActivateFocus && (
+                      <button
+                        type="button"
+                        onClick={() => onActivateFocus(`${course.shortName} Practice & Quiz Qs`)}
+                        className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                        title="Focus on Practice Qs"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        const updated = state.courses.map((c) => {
+                          if (c.id === course.id) {
+                            const states: ("not-started" | "in-progress" | "done")[] = ["not-started", "in-progress", "done"];
+                            const currentIdx = states.indexOf(c.practiceQuestions);
+                            const next = states[(currentIdx + 1) % 3];
+                            return { ...c, practiceQuestions: next };
+                          }
+                          return c;
+                        });
+                        updateState({ courses: updated });
+                      }}
+                      className={`px-2 py-0.5 text-xs font-mono rounded border ${getStatusBorder(course.practiceQuestions)}`}
+                    >
+                      {course.practiceQuestions.toUpperCase()}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="p-3 bg-neutral-50 border border-neutral-200 rounded">
-                  <span className="text-[9px] font-mono tracking-widest text-neutral-400 block uppercase">NEXT TASK ARTIFACT</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono tracking-widest text-neutral-400 block uppercase">NEXT TASK ARTIFACT</span>
+                    {onActivateFocus && course.nextOutput && (
+                      <button
+                        type="button"
+                        onClick={() => onActivateFocus(`${course.shortName} Artifact: ${course.nextOutput}`)}
+                        className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                        title="Focus on Next Task Artifact"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="text"
                     value={course.nextOutput}
@@ -192,16 +230,28 @@ export function AcademicTracker({
                   ) : (
                     (course.weakTopics || []).map((topic, i) => (
                       <div key={i} className="flex items-center justify-between bg-rose-50/30 border border-rose-100 p-2 text-xs text-neutral-700 font-sans">
-                        <span className="leading-tight flex items-start">
+                        <span className="leading-tight flex items-start flex-1 mr-1">
                           <span className="text-rose-500 mr-2 font-bold">•</span>
                           {topic}
                         </span>
-                        <button
-                          onClick={() => removeWeakTopic(course.id, i)}
-                          className="text-neutral-400 hover:text-rose-600 transition-colors ml-2"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center space-x-1 shrink-0">
+                          {onActivateFocus && (
+                            <button
+                              type="button"
+                              onClick={() => onActivateFocus(`Review Recall Deficit: ${course.shortName} - ${topic}`)}
+                              className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                              title="Focus on Weak Topic"
+                            >
+                              <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => removeWeakTopic(course.id, i)}
+                            className="text-neutral-400 hover:text-rose-600 transition-colors ml-1"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     ))
                   )}

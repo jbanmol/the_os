@@ -1,12 +1,14 @@
 import { AppState } from "../types";
-import { Plus, Minus, BookOpen, Share2 } from "lucide-react";
+import { Plus, Minus, BookOpen, Share2, Shield } from "lucide-react";
 
 export function BuildTracker({
   state,
   updateState,
+  onActivateFocus,
 }: {
   state: AppState;
   updateState: (updates: Partial<AppState>) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const b = state.build;
 
@@ -63,7 +65,19 @@ export function BuildTracker({
 
         <div className="space-y-4">
           <div>
-            <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">CONCEPTS STUDIED</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">CONCEPTS STUDIED</span>
+              {onActivateFocus && b.conceptLearning && (
+                <button
+                  type="button"
+                  onClick={() => onActivateFocus(`Study Concepts: ${b.conceptLearning}`)}
+                  className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                  title="Focus on studying concepts"
+                >
+                  <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                </button>
+              )}
+            </div>
             <input
               type="text"
               value={b.conceptLearning}
@@ -73,7 +87,19 @@ export function BuildTracker({
           </div>
 
           <div>
-            <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">OPEN SOURCE / INTEGRATIONS</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">OPEN SOURCE / INTEGRATIONS</span>
+              {onActivateFocus && b.openSourceContribution && (
+                <button
+                  type="button"
+                  onClick={() => onActivateFocus(`OSS Contribution: ${b.openSourceContribution}`)}
+                  className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                  title="Focus on open source contributions"
+                >
+                  <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                </button>
+              )}
+            </div>
             <input
               type="text"
               value={b.openSourceContribution}
@@ -83,7 +109,19 @@ export function BuildTracker({
           </div>
 
           <div>
-            <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">RESEARCH PAPER WORK</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">RESEARCH PAPER WORK</span>
+              {onActivateFocus && b.researchPaperWork && (
+                <button
+                  type="button"
+                  onClick={() => onActivateFocus(`Research Paper: ${b.researchPaperWork}`)}
+                  className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                  title="Focus on research paper"
+                >
+                  <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                </button>
+              )}
+            </div>
             <input
               type="text"
               value={b.researchPaperWork}
@@ -96,7 +134,19 @@ export function BuildTracker({
       </div>
 
       <div className="mt-6 pt-4 border-t border-neutral-100">
-        <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block mb-1">BUILD TARGET ACTION</span>
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider block">BUILD TARGET ACTION</span>
+          {onActivateFocus && b.nextAction && (
+            <button
+              type="button"
+              onClick={() => onActivateFocus(`Build: ${b.nextAction}`)}
+              className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+              title="Focus on active build action"
+            >
+              <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+            </button>
+          )}
+        </div>
         <input
           type="text"
           value={b.nextAction}

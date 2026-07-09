@@ -7,10 +7,12 @@ export function CommandCenter({
   state,
   setMode,
   updateState,
+  onActivateFocus,
 }: {
   state: AppState;
   setMode: (mode: OperatingMode) => void;
   updateState: (updates: Partial<AppState>) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const quiz1Date = new Date("2026-07-19");
   const quiz2Date = new Date("2026-08-16");
@@ -184,11 +186,23 @@ export function CommandCenter({
                 <>
                   <ul className="space-y-2.5 font-sans text-sm">
                     {state.topPriorities.map((p, i) => (
-                      <li key={i} className="flex items-start text-neutral-700">
-                        <span className="font-mono text-xs font-bold text-neutral-400 mr-2.5 bg-neutral-100 w-5 h-5 flex items-center justify-center rounded">
-                          0{i + 1}
-                        </span>
-                        <span className="leading-tight">{p}</span>
+                      <li key={i} className="flex items-center justify-between text-neutral-700 bg-neutral-50/50 hover:bg-neutral-50 p-2 border border-neutral-100 rounded-lg group transition-colors">
+                        <div className="flex items-start mr-2 flex-1">
+                          <span className="font-mono text-xs font-bold text-neutral-400 mr-2.5 bg-neutral-100 w-5 h-5 flex-shrink-0 flex items-center justify-center rounded">
+                            0{i + 1}
+                          </span>
+                          <span className="leading-tight font-medium text-xs text-neutral-850">{p}</span>
+                        </div>
+                        {onActivateFocus && (
+                          <button
+                            onClick={() => onActivateFocus(p)}
+                            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity bg-neutral-900 hover:bg-neutral-800 text-white text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-1 rounded flex items-center space-x-1 shadow-sm cursor-pointer"
+                            title="Activate Focus Shield overlay for this priority"
+                          >
+                            <Shield className="w-2.5 h-2.5 text-emerald-400 fill-emerald-400/20" />
+                            <span>Focus</span>
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -240,9 +254,21 @@ export function CommandCenter({
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm font-medium tracking-tight text-emerald-300 leading-snug">
-                    {state.nextBestAction}
-                  </p>
+                  <div className="flex flex-col gap-2.5">
+                    <p className="text-sm font-medium tracking-tight text-emerald-300 leading-snug">
+                      {state.nextBestAction}
+                    </p>
+                    {onActivateFocus && (
+                      <button
+                        onClick={() => onActivateFocus(state.nextBestAction)}
+                        className="self-start bg-emerald-600 hover:bg-emerald-500 text-neutral-950 hover:text-neutral-950 text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-md flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm"
+                        title="Focus on Next Best Action"
+                      >
+                        <Shield className="w-3 h-3 fill-neutral-950/20" />
+                        <span>Focus Shield</span>
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -290,6 +316,29 @@ export function CommandCenter({
                   </p>
                 )}
               </div>
+
+              {/* Clinician Advisory Scaffolding if active */}
+              {state.clinicianPrescriptions && state.clinicianPrescriptions.some(p => p.active) && (
+                <div className="bg-emerald-50/55 border border-emerald-200/80 p-3.5 text-xs rounded">
+                  <div className="flex items-center space-x-1.5 mb-1.5 text-emerald-800 font-mono font-bold tracking-wider text-[9px] uppercase">
+                    <Activity className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
+                    <span>⚕ Prescribed CBT Protocol</span>
+                  </div>
+                  {state.clinicianPrescriptions.filter(p => p.active).map(p => (
+                    <div key={p.id} className="space-y-1.5">
+                      <p className="text-[11px] text-neutral-800 leading-relaxed font-sans">
+                        {p.protocolNotes}
+                      </p>
+                      {p.medicationGuideline && (
+                        <p className="text-[10px] text-emerald-900 font-mono font-bold pt-1 bg-white/60 px-1.5 py-0.5 border border-emerald-100 rounded flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>RX: {p.medicationGuideline}</span>
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

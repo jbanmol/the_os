@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AppState, KidauraTask, KidauraLongTermTask } from "../types";
 import { 
   Zap, Plus, Check, Trash2, AlertTriangle, Calendar, 
-  Brain, LayoutGrid, ClipboardList, Clock, ArrowRight, CheckCircle2
+  Brain, LayoutGrid, ClipboardList, Clock, ArrowRight, CheckCircle2, Shield
 } from "lucide-react";
 import { getLogicalDate, getDaysDifference } from "../lib/dateUtils";
 
@@ -21,9 +21,11 @@ function getCategoryOfTask(longTermTaskId?: string): "classification" | "iep" | 
 export function KidauraTracker({
   state,
   updateState,
+  onActivateFocus,
 }: {
   state: AppState;
   updateState: (updates: Partial<AppState>) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const k = state.kidaura;
   const currentLogicalDate = getLogicalDate(state.currentDate);
@@ -269,6 +271,16 @@ export function KidauraTracker({
                     </div>
                     <div className="flex items-center gap-1.5 ml-2 shrink-0">
                       <span className={`text-[8px] font-mono uppercase px-1.5 py-0.5 border rounded-full ${ageBadge}`}>{badgeText}</span>
+                      {onActivateFocus && !task.completed && (
+                        <button
+                          type="button"
+                          onClick={() => onActivateFocus(task.title)}
+                          className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                          title="Decompose in Focus Shield"
+                        >
+                          <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                        </button>
+                      )}
                       <button type="button" onClick={() => handleDeleteTask(task.id)} className="text-neutral-400 hover:text-rose-600 p-0.5 rounded transition-colors">
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -422,6 +434,16 @@ export function KidauraTracker({
                     </div>
                     <div className="flex items-center gap-1.5 ml-2 shrink-0">
                       <span className={`text-[8px] font-mono uppercase px-1.5 py-0.5 border rounded-full ${ageBadge}`}>{badgeText}</span>
+                      {onActivateFocus && !task.completed && (
+                        <button
+                          type="button"
+                          onClick={() => onActivateFocus(task.title)}
+                          className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                          title="Decompose in Focus Shield"
+                        >
+                          <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                        </button>
+                      )}
                       <button type="button" onClick={() => handleDeleteTask(task.id)} className="text-neutral-400 hover:text-rose-600 p-0.5 rounded transition-colors">
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -575,6 +597,16 @@ export function KidauraTracker({
                     </div>
                     <div className="flex items-center gap-1.5 ml-2 shrink-0">
                       <span className={`text-[8px] font-mono uppercase px-1.5 py-0.5 border rounded-full ${ageBadge}`}>{badgeText}</span>
+                      {onActivateFocus && !task.completed && (
+                        <button
+                          type="button"
+                          onClick={() => onActivateFocus(task.title)}
+                          className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                          title="Decompose in Focus Shield"
+                        >
+                          <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                        </button>
+                      )}
                       <button type="button" onClick={() => handleDeleteTask(task.id)} className="text-neutral-400 hover:text-rose-600 p-0.5 rounded transition-colors">
                         <Trash2 className="w-3 h-3" />
                       </button>

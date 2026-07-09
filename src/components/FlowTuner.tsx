@@ -259,8 +259,8 @@ export function FlowTuner({
       let currentIdx = 0;
       const interval = setInterval(() => {
         if (currentIdx < textResponse.length) {
-          setTypingText((prev) => prev + textResponse.charAt(currentIdx));
-          currentIdx += 2; // Type 2 chars at a time for speed
+          setTypingText((prev) => prev + textResponse.substring(currentIdx, currentIdx + 2));
+          currentIdx += 2; // Append 2 chars at a time for speed
         } else {
           clearInterval(interval);
         }

@@ -170,4 +170,25 @@ export interface AppState {
     sleep: number;
     system: number;
   };
+  role?: "patient" | "clinician";
+  asrsHistory?: ASRSRecord[];
+  clinicianPrescriptions?: ClinicianPrescription[];
 }
+
+export interface ASRSRecord {
+  id: string;
+  date: string;
+  answers: Record<number, number>; // 1-indexed questions (1 to 6) -> rating 0 (Never) to 4 (Very Often)
+  score: number; // calculated score (0-6) based on threshold shaded boxes
+  isSignificant: boolean; // whether 4 or more answers fall in the shaded frequency range
+}
+
+export interface ClinicianPrescription {
+  id: string;
+  date: string;
+  doctorName: string;
+  protocolNotes: string; // CBT guidance, cognitive pacing
+  medicationGuideline?: string; // active pharmacological protocol
+  active: boolean;
+}
+

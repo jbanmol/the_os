@@ -13,6 +13,8 @@ import { HealthTracker } from "./components/HealthTracker";
 import { LeakageDetector } from "./components/LeakageDetector";
 import { LogsAndBacklog } from "./components/LogsAndBacklog";
 import { IdeasIncubator } from "./components/IdeasIncubator";
+import { FocusShield } from "./components/FocusShield";
+import { ClinicianSuite } from "./components/ClinicianSuite";
 import {
   Terminal,
   Layers,
@@ -93,6 +95,8 @@ export default function App() {
   const [modeRecommendation, setModeRecommendation] = useState<{ recommendedMode: string; reason: string } | null>(null);
   const [uncertainties, setUncertainties] = useState<string[]>([]);
   const [ignoredFacts, setIgnoredFacts] = useState<string[]>([]);
+  const [activeFocusTask, setActiveFocusTask] = useState<string | null>(null);
+  const [showClinicianSuite, setShowClinicianSuite] = useState(false);
 
   const quickLogs = [
     { text: "🧘 Completed 60m Kriya Yoga & early sunlight", label: "Yoga/Sadhana" },
@@ -471,44 +475,58 @@ export default function App() {
             </p>
           </div>
 
-          {/* Google Cloud Sync Status Widget */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-neutral-100 p-3 border border-neutral-200">
-            <div className="font-mono text-xs">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Clinical Diagnostics Trigger Block */}
+            <button
+              onClick={() => setShowClinicianSuite(true)}
+              className="flex items-center space-x-2.5 bg-rose-50 hover:bg-rose-100/80 text-rose-900 font-mono text-[10px] font-bold uppercase tracking-wider p-3 border border-rose-200 transition-all cursor-pointer shadow-xs text-left"
+            >
+              <Activity className="w-4 h-4 text-rose-600 flex-shrink-0" />
+              <div>
+                <span className="block font-black text-rose-950">⚕ CLINICAL SUITE</span>
+                <span className="block text-[8px] text-rose-500 font-normal normal-case">ASRS-v1.1 Screener & Doctor Portal</span>
+              </div>
+            </button>
+
+            {/* Google Cloud Sync Status Widget */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-neutral-100 p-3 border border-neutral-200">
+              <div className="font-mono text-xs">
+                {user ? (
+                  <div className="space-y-0.5">
+                    <div className="flex items-center space-x-1.5 text-emerald-800 font-bold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>CLOUD SYNC ACTIVE</span>
+                    </div>
+                    <div className="text-[10px] text-neutral-500">{user.email}</div>
+                  </div>
+                ) : (
+                  <div className="space-y-0.5">
+                    <div className="flex items-center space-x-1.5 text-amber-800 font-bold">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      <span>OFFLINE LOCAL SANDBOX</span>
+                    </div>
+                    <div className="text-[10px] text-neutral-500">Data saved locally in cache</div>
+                  </div>
+                )}
+              </div>
+              
               {user ? (
-                <div className="space-y-0.5">
-                  <div className="flex items-center space-x-1.5 text-emerald-800 font-bold">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>CLOUD SYNC ACTIVE</span>
-                  </div>
-                  <div className="text-[10px] text-neutral-500">{user.email}</div>
-                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="bg-white hover:bg-neutral-50 text-neutral-800 font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-neutral-300 transition-all cursor-pointer shadow-xs"
+                >
+                  Disconnect Sync
+                </button>
               ) : (
-                <div className="space-y-0.5">
-                  <div className="flex items-center space-x-1.5 text-amber-800 font-bold">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" />
-                    <span>OFFLINE LOCAL SANDBOX</span>
-                  </div>
-                  <div className="text-[10px] text-neutral-500">Data saved locally in cache</div>
-                </div>
+                <button
+                  onClick={handleGoogleSignIn}
+                  className="bg-neutral-950 hover:bg-neutral-900 text-white font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
+                >
+                  <RefreshCw className={`w-3 h-3 ${loadingDb ? 'animate-spin' : ''}`} />
+                  <span>Connect Google Sync</span>
+                </button>
               )}
             </div>
-            
-            {user ? (
-              <button
-                onClick={handleSignOut}
-                className="bg-white hover:bg-neutral-50 text-neutral-800 font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border border-neutral-300 transition-all cursor-pointer shadow-xs"
-              >
-                Disconnect Sync
-              </button>
-            ) : (
-              <button
-                onClick={handleGoogleSignIn}
-                className="bg-neutral-950 hover:bg-neutral-900 text-white font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
-              >
-                <RefreshCw className={`w-3 h-3 ${loadingDb ? 'animate-spin' : ''}`} />
-                <span>Connect Google Sync</span>
-              </button>
-            )}
           </div>
 
           {/* Quick return / Overview Switch */}
@@ -587,7 +605,7 @@ export default function App() {
         {selectedBoard === null ? (
           <div className="space-y-6">
             {/* Primary Core Directive Box */}
-            <CommandCenter state={state} setMode={setMode} updateState={updateState} />
+            <CommandCenter state={state} setMode={setMode} updateState={updateState} onActivateFocus={setActiveFocusTask} />
 
             {/* Scoreboard showing the dynamically calculated System Index */}
             <Scoreboard state={state} updateScorePoint={updateScorePoint} />
@@ -883,6 +901,7 @@ export default function App() {
                     state={state}
                     toggleCourseWeek={toggleCourseWeek}
                     updateState={updateState}
+                    onActivateFocus={setActiveFocusTask}
                   />
                   {/* Category Backlog integration */}
                   <div className="border border-neutral-200 p-4 bg-neutral-50">
@@ -916,6 +935,7 @@ export default function App() {
                     updateProjectViva={updateProjectViva}
                     updateProjectOwnership={updateProjectOwnership}
                     updateState={updateState}
+                    onActivateFocus={setActiveFocusTask}
                   />
                   {/* Category Backlog integration */}
                   <div className="border border-neutral-200 p-4 bg-neutral-50">
@@ -943,7 +963,7 @@ export default function App() {
 
               {selectedBoard === "kidaura" && (
                 <div className="space-y-6">
-                  <KidauraTracker state={state} updateState={updateState} />
+                  <KidauraTracker state={state} updateState={updateState} onActivateFocus={setActiveFocusTask} />
                   {/* Category Backlog integration */}
                   <div className="border border-neutral-200 p-4 bg-neutral-50">
                     <h3 className="font-mono text-xs font-bold uppercase mb-2">Kidaura Backlogs</h3>
@@ -970,7 +990,7 @@ export default function App() {
 
               {selectedBoard === "build" && (
                 <div className="space-y-6">
-                  <BuildTracker state={state} updateState={updateState} />
+                  <BuildTracker state={state} updateState={updateState} onActivateFocus={setActiveFocusTask} />
                   {/* Category Backlog integration */}
                   <div className="border border-neutral-200 p-4 bg-neutral-50">
                     <h3 className="font-mono text-xs font-bold uppercase mb-2">Build Backlogs</h3>
@@ -1046,6 +1066,7 @@ export default function App() {
                     state={state}
                     addBacklogItem={addBacklogItem}
                     removeBacklogItem={removeBacklogItem}
+                    onActivateFocus={setActiveFocusTask}
                   />
                 </div>
               )}
@@ -1240,6 +1261,21 @@ export default function App() {
           </button>
         </form>
       </div>
+
+      {activeFocusTask && (
+        <FocusShield
+          taskTitle={activeFocusTask}
+          onClose={() => setActiveFocusTask(null)}
+        />
+      )}
+
+      {showClinicianSuite && (
+        <ClinicianSuite
+          state={state}
+          updateState={updateState}
+          onClose={() => setShowClinicianSuite(false)}
+        />
+      )}
     </div>
   );
 }

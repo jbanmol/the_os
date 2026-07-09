@@ -275,5 +275,25 @@ export const initialAppState: AppState = {
       description: "Submit Business Data Management assignment on database normalization.",
       type: "task"
     }
+  ],
+  role: "patient",
+  asrsHistory: [
+    {
+      id: "asrs-initial",
+      date: "2026-06-25",
+      answers: { 1: 3, 2: 2, 3: 3, 4: 4, 5: 2, 6: 3 }, // 3=Often, 2=Sometimes, 4=Very Often
+      score: 5,
+      isSignificant: true
+    }
+  ],
+  clinicianPrescriptions: [
+    {
+      id: "presc-1",
+      date: "2026-06-25",
+      doctorName: "Dr. Dave, MD (ADHD Specialist)",
+      protocolNotes: "Focus primarily on advancing the circadian phase: strict light-therapy at 7:30 AM to advance sleep onset. Leverage short Task-Positive Network (TPN) breathing warm-ups before coding sessions to override default hyper-arousal.",
+      medicationGuideline: "Methylphenidate ER 20mg at 8:00 AM daily",
+      active: true
+    }
   ]
 };

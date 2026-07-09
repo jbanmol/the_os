@@ -1,16 +1,18 @@
 import { AppState } from "../types";
 import { formatDistanceToNow } from "date-fns";
-import { Check, Plus, Trash2, BookOpen, Layers, Clipboard, Calendar, TrendingUp, BarChart2, Activity } from "lucide-react";
+import { Check, Plus, Trash2, BookOpen, Layers, Clipboard, Calendar, TrendingUp, BarChart2, Activity, Shield } from "lucide-react";
 import { useState } from "react";
 
 export function LogsAndBacklog({
   state,
   addBacklogItem,
   removeBacklogItem,
+  onActivateFocus,
 }: {
   state: AppState;
   addBacklogItem: (category: "academic" | "projects" | "kidaura" | "build" | "health", item: string) => void;
   removeBacklogItem: (category: "academic" | "projects" | "kidaura" | "build" | "health", index: number) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const [inputs, setInputs] = useState({
     academic: "",
@@ -73,19 +75,30 @@ export function LogsAndBacklog({
                       cat.items.map((item, idx) => (
                         <li
                           key={idx}
-                          className="text-xs text-neutral-700 flex items-start justify-between group py-0.5"
+                          className="text-xs text-neutral-700 flex items-start justify-between group py-1 border-b border-neutral-100/40 last:border-0"
                         >
-                          <span className="flex items-start">
+                          <span className="flex items-start flex-1 mr-2">
                             <span className="text-neutral-400 mr-1.5">□</span>
                             <span className="leading-tight">{item}</span>
                           </span>
-                          <button
-                            onClick={() => removeBacklogItem(cat.id, idx)}
-                            className="text-neutral-300 hover:text-neutral-800 transition-colors"
-                            title="Resolve item"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {onActivateFocus && (
+                              <button
+                                onClick={() => onActivateFocus(item)}
+                                className="text-neutral-400 hover:text-neutral-900 transition-colors cursor-pointer"
+                                title="Decompose in Focus Shield"
+                              >
+                                <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => removeBacklogItem(cat.id, idx)}
+                              className="text-neutral-300 hover:text-emerald-600 transition-colors cursor-pointer"
+                              title="Resolve item"
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </li>
                       ))
                     )}

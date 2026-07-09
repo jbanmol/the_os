@@ -1,5 +1,5 @@
 import { AppState } from "../types";
-import { Award, BookOpen, AlertCircle, Sparkles, Check, Play } from "lucide-react";
+import { Award, BookOpen, AlertCircle, Sparkles, Check, Play, Shield } from "lucide-react";
 
 export function ProjectTracker({
   state,
@@ -7,12 +7,14 @@ export function ProjectTracker({
   updateProjectViva,
   updateProjectOwnership,
   updateState,
+  onActivateFocus,
 }: {
   state: AppState;
   updateProjectProgress: (projId: string, progress: number) => void;
   updateProjectViva: (projId: string, value: number) => void;
   updateProjectOwnership: (projId: string, value: number) => void;
   updateState: (updates: Partial<AppState>) => void;
+  onActivateFocus?: (title: string) => void;
 }) {
   const getOwnershipText = (level: number) => {
     switch (level) {
@@ -138,7 +140,19 @@ export function ProjectTracker({
               {/* Editable inputs */}
               <div className="space-y-3 pt-3 border-t border-neutral-100">
                 <div>
-                  <span className="text-[9px] font-mono text-neutral-400 uppercase block">LATEST ARTIFACT:</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-neutral-400 uppercase block">LATEST ARTIFACT:</span>
+                    {onActivateFocus && proj.artifact && (
+                      <button
+                        type="button"
+                        onClick={() => onActivateFocus(`${proj.name} - Build Artifact: ${proj.artifact}`)}
+                        className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                        title="Focus on Building Artifact"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="text"
                     value={proj.artifact}
@@ -151,7 +165,19 @@ export function ProjectTracker({
                 </div>
 
                 <div>
-                  <span className="text-[9px] font-mono text-neutral-400 uppercase block">STUCK POINT:</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-neutral-400 uppercase block">STUCK POINT:</span>
+                    {onActivateFocus && proj.stuckPoint && (
+                      <button
+                        type="button"
+                        onClick={() => onActivateFocus(`Resolve Stuck Point: ${proj.name} - ${proj.stuckPoint}`)}
+                        className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                        title="Focus on Resolving Stuck Point"
+                      >
+                        <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                      </button>
+                    )}
+                  </div>
                   <input
                     type="text"
                     value={proj.stuckPoint}
@@ -166,7 +192,19 @@ export function ProjectTracker({
             </div>
 
             <div className="mt-4 pt-3 border-t border-neutral-100">
-              <span className="text-[9px] font-mono text-neutral-400 uppercase block mb-1">NEXT CRITICAL ACTION:</span>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[9px] font-mono text-neutral-400 uppercase block">NEXT CRITICAL ACTION:</span>
+                {onActivateFocus && proj.nextAction && (
+                  <button
+                    type="button"
+                    onClick={() => onActivateFocus(`Project Action: ${proj.name} - ${proj.nextAction}`)}
+                    className="text-neutral-400 hover:text-emerald-500 p-0.5 rounded transition-colors cursor-pointer"
+                    title="Focus on Next Critical Action"
+                  >
+                    <Shield className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/10" />
+                  </button>
+                )}
+              </div>
               <input
                 type="text"
                 value={proj.nextAction}
