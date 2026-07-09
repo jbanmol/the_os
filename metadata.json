@@ -1,0 +1,8 @@
+{
+  "name": "Dave OS",
+  "description": "A personal operating system dashboard for academics, Kidaura work, deep work, and health tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
