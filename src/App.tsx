@@ -1,6 +1,7 @@
 import { useOSStore, getRecommendedMode } from "./store/useStore";
 import { CommandCenter } from "./components/CommandCenter";
 import { Scoreboard } from "./components/Scoreboard";
+import { FlowTuner } from "./components/FlowTuner";
 import { ContributionGrid } from "./components/ContributionGrid";
 import { auth, googleProvider, signInWithPopup, signOut } from "./lib/firebaseClient";
 import { AcademicTracker } from "./components/AcademicTracker";
@@ -590,6 +591,9 @@ export default function App() {
 
             {/* Scoreboard showing the dynamically calculated System Index */}
             <Scoreboard state={state} updateScorePoint={updateScorePoint} />
+
+            {/* SPACE Cognitive Reserves & Flow State Tuner */}
+            <FlowTuner state={state} updateState={updateState} />
 
             {/* Historical System Index Heatmap */}
             <ContributionGrid />
