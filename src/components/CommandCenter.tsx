@@ -124,6 +124,110 @@ export function CommandCenter({
             </div>
           </div>
 
+          {/* Today's Grounded Focus Card & Time-Boxing (Externalized Goal Visualizations) */}
+          {state.morningIntentions && (state.morningIntentions.academicsTarget || state.morningIntentions.kidauraTarget || state.morningIntentions.buildTarget) && (
+            <div className="mb-6 bg-neutral-900 text-white border border-neutral-800 p-4 rounded-lg space-y-3.5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-[10px] font-mono tracking-widest text-neutral-300 uppercase font-black">
+                    TODAY'S GROUNDED TARGETS & TIME-BOXES
+                  </span>
+                </div>
+                <span className="font-mono text-[9px] bg-neutral-800 text-neutral-400 px-2 py-0.5 rounded uppercase">
+                  ADHD-Safe Single Thread Active
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                {/* Academics */}
+                {state.morningIntentions.academicsTarget && (
+                  <div className="bg-neutral-950 p-2.5 border border-neutral-850 rounded flex flex-col justify-between">
+                    <div>
+                      <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-wider block">📚 Academics</span>
+                      <p className="text-xs font-semibold text-neutral-200 mt-1 line-clamp-2 leading-tight">
+                        {state.morningIntentions.academicsTarget}
+                      </p>
+                    </div>
+                    {state.morningIntentions.academicsBox && (
+                      <span className="text-[9px] font-mono text-amber-300 bg-amber-950/40 border border-amber-900/30 px-1.5 py-0.5 mt-2 block rounded text-center">
+                        {state.morningIntentions.academicsBox}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Kidaura */}
+                {state.morningIntentions.kidauraTarget && (
+                  <div className="bg-neutral-950 p-2.5 border border-neutral-850 rounded flex flex-col justify-between">
+                    <div>
+                      <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-wider block">🧬 Kidaura</span>
+                      <p className="text-xs font-semibold text-neutral-200 mt-1 line-clamp-2 leading-tight">
+                        {state.morningIntentions.kidauraTarget}
+                      </p>
+                    </div>
+                    {state.morningIntentions.kidauraBox && (
+                      <span className="text-[9px] font-mono text-amber-300 bg-amber-950/40 border border-amber-900/30 px-1.5 py-0.5 mt-2 block rounded text-center">
+                        {state.morningIntentions.kidauraBox}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Deep Work */}
+                {state.morningIntentions.buildTarget && (
+                  <div className="bg-neutral-950 p-2.5 border border-neutral-850 rounded flex flex-col justify-between">
+                    <div>
+                      <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-wider block">💻 Deep Work</span>
+                      <p className="text-xs font-semibold text-neutral-200 mt-1 line-clamp-2 leading-tight">
+                        {state.morningIntentions.buildTarget}
+                      </p>
+                    </div>
+                    {state.morningIntentions.buildBox && (
+                      <span className="text-[9px] font-mono text-amber-300 bg-amber-950/40 border border-amber-900/30 px-1.5 py-0.5 mt-2 block rounded text-center">
+                        {state.morningIntentions.buildBox}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Sadhana */}
+                {state.morningIntentions.bodyTarget && (
+                  <div className="bg-neutral-950 p-2.5 border border-neutral-850 rounded flex flex-col justify-between">
+                    <div>
+                      <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-wider block">🧘 Sadhana</span>
+                      <p className="text-xs font-semibold text-neutral-200 mt-1 line-clamp-2 leading-tight">
+                        {state.morningIntentions.bodyTarget}
+                      </p>
+                    </div>
+                    {state.morningIntentions.bodyBox && (
+                      <span className="text-[9px] font-mono text-neutral-400 bg-neutral-900 px-1.5 py-0.5 mt-2 block rounded text-center">
+                        {state.morningIntentions.bodyBox}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Circadian */}
+                {state.morningIntentions.sleepTarget && (
+                  <div className="bg-neutral-950 p-2.5 border border-neutral-850 rounded flex flex-col justify-between">
+                    <div>
+                      <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-wider block">🌙 Circadian</span>
+                      <p className="text-xs font-semibold text-neutral-200 mt-1 line-clamp-2 leading-tight">
+                        {state.morningIntentions.sleepTarget}
+                      </p>
+                    </div>
+                    {state.morningIntentions.sleepBox && (
+                      <span className="text-[9px] font-mono text-neutral-400 bg-neutral-900 px-1.5 py-0.5 mt-2 block rounded text-center">
+                        {state.morningIntentions.sleepBox}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             {/* Priorities */}
             <div>

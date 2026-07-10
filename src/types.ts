@@ -173,6 +173,19 @@ export interface AppState {
   role?: "patient" | "clinician";
   asrsHistory?: ASRSRecord[];
   clinicianPrescriptions?: ClinicianPrescription[];
+  morningGroundingCompletedDate?: string;
+  morningIntentions?: {
+    academicsTarget?: string;
+    academicsBox?: string;
+    kidauraTarget?: string;
+    kidauraBox?: string;
+    buildTarget?: string;
+    buildBox?: string;
+    bodyTarget?: string;
+    bodyBox?: string;
+    sleepTarget?: string;
+    sleepBox?: string;
+  };
 }
 
 export interface ASRSRecord {

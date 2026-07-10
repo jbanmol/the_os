@@ -295,5 +295,18 @@ export const initialAppState: AppState = {
       medicationGuideline: "Methylphenidate ER 20mg at 8:00 AM daily",
       active: true
     }
-  ]
+  ],
+  morningGroundingCompletedDate: "",
+  morningIntentions: {
+    academicsTarget: "",
+    academicsBox: "",
+    kidauraTarget: "",
+    kidauraBox: "",
+    buildTarget: "",
+    buildBox: "",
+    bodyTarget: "",
+    bodyBox: "",
+    sleepTarget: "",
+    sleepBox: ""
+  }
 };

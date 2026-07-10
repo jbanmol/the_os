@@ -43,9 +43,11 @@ import {
   MessageSquare,
   HelpCircle,
   Shield,
-  Lightbulb
+  Lightbulb,
+  Sun
 } from "lucide-react";
 import React, { useState } from "react";
+import { MorningGrounding } from "./components/MorningGrounding";
 
 export default function App() {
   const {
@@ -97,6 +99,19 @@ export default function App() {
   const [ignoredFacts, setIgnoredFacts] = useState<string[]>([]);
   const [activeFocusTask, setActiveFocusTask] = useState<string | null>(null);
   const [showClinicianSuite, setShowClinicianSuite] = useState(false);
+  const [isMinimalistMode, setIsMinimalistMode] = useState(true);
+  const [clinicianPinInput, setClinicianPinInput] = useState("");
+  const [showMorningGrounding, setShowMorningGrounding] = useState(false);
+
+  React.useEffect(() => {
+    // Auto-trigger on initial load if morning grounding not completed today
+    const todayStr = state.currentDate ? state.currentDate.split("T")[0] : new Date().toISOString().split("T")[0];
+    if (state.morningGroundingCompletedDate !== todayStr) {
+      // Delay slightly for smooth rendering
+      const timer = setTimeout(() => setShowMorningGrounding(true), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [state.morningGroundingCompletedDate, state.currentDate]);
 
   const quickLogs = [
     { text: "🧘 Completed 60m Kriya Yoga & early sunlight", label: "Yoga/Sadhana" },
@@ -431,10 +446,15 @@ export default function App() {
   ];
 
   const sortedBoards = React.useMemo(() => {
-    return [...boards].sort((a, b) => {
+    let list = [...boards];
+    if (isMinimalistMode) {
+      const minimalKeys = ["academic", "kidaura", "build", "body", "sleep"];
+      list = list.filter((b) => minimalKeys.includes(b.id));
+    }
+    return list.sort((a, b) => {
       return currentBoardOrder.indexOf(a.id) - currentBoardOrder.indexOf(b.id);
     });
-  }, [boards, currentBoardOrder]);
+  }, [boards, currentBoardOrder, isMinimalistMode]);
 
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-900 pb-28 selection:bg-neutral-900 selection:text-white">
@@ -540,6 +560,44 @@ export default function App() {
             </button>
           )}
         </header>
+        
+        {/* Sensory/Attention Load Controller Bar */}
+        <div className="bg-white border border-neutral-200 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center space-x-2.5 text-left">
+            <div className={`p-1.5 ${isMinimalistMode ? "bg-indigo-50 text-indigo-700 border-indigo-100" : "bg-neutral-50 text-neutral-400 border-neutral-200"} border`}>
+              <Activity className="w-4 h-4" />
+            </div>
+            <div>
+              <h4 className="text-xs font-mono font-bold text-neutral-950 uppercase tracking-tight">
+                Attention & Sensory Filter Status
+              </h4>
+              <p className="text-[10px] text-neutral-500 font-sans leading-tight">
+                {isMinimalistMode 
+                  ? "Minimal ADHD-Safe Interface is active. Displaying exactly 5 core categories with zero telemetry clutter." 
+                  : "Standard diagnostic interface is active. 10 clipboards, grids, and metrics are displayed."}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setShowMorningGrounding(true)}
+              className="font-mono text-[10px] font-bold uppercase px-3 py-1.5 transition-all border cursor-pointer bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100 flex items-center gap-1.5"
+            >
+              <Sun className="w-3.5 h-3.5 text-amber-600 animate-spin-slow" />
+              <span>☀️ MORNING GROUNDING RITUAL</span>
+            </button>
+            <button
+              onClick={() => setIsMinimalistMode(!isMinimalistMode)}
+              className={`font-mono text-[10px] font-bold uppercase px-3 py-1.5 transition-all border cursor-pointer ${
+                isMinimalistMode 
+                  ? "bg-indigo-950 text-white border-indigo-950 hover:bg-indigo-900" 
+                  : "bg-white text-neutral-700 border-neutral-300 hover:bg-neutral-50"
+              }`}
+            >
+              {isMinimalistMode ? "⚡ MINIMAL ADHD VIEW: ACTIVE" : "⚙ STANDARD VIEW: UNFILTERED"}
+            </button>
+          </div>
+        </div>
 
         {/* System Alerts & Recommendations */}
         {state.body.isPracticeStatusUnverified && (
@@ -607,14 +665,19 @@ export default function App() {
             {/* Primary Core Directive Box */}
             <CommandCenter state={state} setMode={setMode} updateState={updateState} onActivateFocus={setActiveFocusTask} />
 
-            {/* Scoreboard showing the dynamically calculated System Index */}
-            <Scoreboard state={state} updateScorePoint={updateScorePoint} />
+            {/* Scoreboard, FlowTuner, and ContributionGrid - hidden in minimalist mode for attention recovery */}
+            {!isMinimalistMode && (
+              <>
+                {/* Scoreboard showing the dynamically calculated System Index */}
+                <Scoreboard state={state} updateScorePoint={updateScorePoint} />
 
-            {/* SPACE Cognitive Reserves & Flow State Tuner */}
-            <FlowTuner state={state} updateState={updateState} />
+                {/* SPACE Cognitive Reserves & Flow State Tuner */}
+                <FlowTuner state={state} updateState={updateState} />
 
-            {/* Historical System Index Heatmap */}
-            <ContributionGrid />
+                {/* Historical System Index Heatmap */}
+                <ContributionGrid />
+              </>
+            )}
 
             {/* The Clipboard Wall: Beautifully divided categories */}
             <section className="space-y-6">
@@ -774,8 +837,9 @@ export default function App() {
             </section>
 
             {/* Quick Micro Protocols and Settings */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-              <div className="bg-white border border-neutral-200 p-6">
+            {!isMinimalistMode && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                <div className="bg-white border border-neutral-200 p-6">
                 <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-400 block mb-2">
                   OPERATING CHARTER PROTOCOLS
                 </span>
@@ -828,8 +892,9 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
+          )}
+        </div>
+      ) : (
           /* 2. Detailed Expanded Board View */
           <div className="space-y-6">
             {/* Quick Switch Ribbon at the top to jump between clipboards in 1 click! */}
@@ -1274,6 +1339,14 @@ export default function App() {
           state={state}
           updateState={updateState}
           onClose={() => setShowClinicianSuite(false)}
+        />
+      )}
+
+      {showMorningGrounding && (
+        <MorningGrounding
+          state={state}
+          updateState={updateState}
+          onClose={() => setShowMorningGrounding(false)}
         />
       )}
     </div>
